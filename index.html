@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accountability Fitness Schedule - Tai Chi & Strength</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-md">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Weekly Fitness Schedule</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Tai Chi & Strength Accountability Dashboard</p>
+                </div>
+            </div>
+
+            <!-- Stats & Controls -->
+            <div class="flex items-center gap-4">
+                <!-- LL Progress Badge -->
+                <div class="bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 border border-slate-200 dark:border-slate-600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-brand-500"></span>
+                    <span>LL: <strong id="ll-progress-text">0</strong>/5</span>
+                </div>
+                <!-- OG Progress Badge -->
+                <div class="bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 border border-slate-200 dark:border-slate-600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                    <span>OG: <strong id="og-progress-text">0</strong>/5</span>
+                </div>
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+                    <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-brand-600 to-teal-700 rounded-2xl p-6 text-white shadow-lg mb-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <h2 class="text-2xl font-bold mb-2">Mon - Fri Accountability Tracker</h2>
+                <p class="text-brand-50 text-sm max-w-xl">
+                    Monday, Wednesday, and Friday are Tai Chi routines. Tuesday and Thursday are Strength Training days. Check off items as LL and OG complete them throughout the week!
+                </p>
+            </div>
+            <div class="flex gap-3 w-full md:w-auto">
+                <button onclick="openAiModal()" class="flex-1 md:flex-none bg-white text-brand-700 hover:bg-brand-50 font-semibold px-5 py-2.5 rounded-xl shadow transition text-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    AI Strength Generator
+                </button>
+                <button onclick="resetWeeklyProgress()" class="bg-teal-800/50 hover:bg-teal-800 text-white font-medium px-4 py-2.5 rounded-xl transition text-sm">
+                    Reset Week
+                </button>
+            </div>
+        </div>
+
+        <!-- Weekly Grid (Monday through Friday) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Monday: Tai Chi -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Monday</span>
+                        <span class="text-xs text-slate-400">Tai Chi Flow</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Gentle Morning Balance</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Focus on centering breathing and fluid joint mobility.</p>
+                    
+                    <div class="bg-slate-100 dark:bg-slate-700/50 rounded-xl p-3 mb-4 border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">20-Min Beginner Tai Chi</span>
+                            <span class="text-[10px] bg-slate-200 dark:bg-slate-600 px-2 py-0.5 rounded">YouTube</span>
+                        </div>
+                        <div class="aspect-video w-full rounded-lg overflow-hidden bg-slate-900 mb-3">
+                            <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/v-TheX1c_Yg" title="Tai Chi Routine" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=v-TheX1c_Yg" target="_blank" class="text-xs text-brand-600 dark:text-brand-400 font-medium hover:underline flex items-center gap-1">
+                            <span>Open on YouTube directly</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Dual Checkboxes -->
+                <div class="border-t border-slate-100 dark:border-slate-700 pt-3 mt-2 flex justify-between items-center">
+                    <span class="text-xs font-medium text-slate-500">Completed:</span>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="mon" data-person="ll" onchange="updateProgress()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                            <span class="font-bold text-brand-600 dark:text-brand-400">LL</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="mon" data-person="og" onchange="updateProgress()" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500">
+                            <span class="font-bold text-purple-600 dark:text-purple-400">OG</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tuesday: Strength Training -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Tuesday</span>
+                        <span class="text-xs text-slate-400">Strength Builder</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Upper Body & Core</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Controlled movements with light weights or resistance bands.</p>
+                    
+                    <div class="space-y-2 mb-4 text-xs">
+                        <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700">
+                            <div class="font-medium text-slate-700 dark:text-slate-300 mb-1">Seated Overhead Press (3 x 10)</div>
+                        </div>
+                        <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700">
+                            <div class="font-medium text-slate-700 dark:text-slate-300 mb-1">Wall or Counter Push-ups (3 x 8)</div>
+                        </div>
+                        <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700">
+                            <div class="font-medium text-slate-700 dark:text-slate-300 mb-1">Resistance Band Rows (3 x 12)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dual Checkboxes -->
+                <div class="border-t border-slate-100 dark:border-slate-700 pt-3 mt-2 flex justify-between items-center">
+                    <span class="text-xs font-medium text-slate-500">Completed:</span>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="tue" data-person="ll" onchange="updateProgress()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                            <span class="font-bold text-brand-600 dark:text-brand-400">LL</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="tue" data-person="og" onchange="updateProgress()" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500">
+                            <span class="font-bold text-purple-600 dark:text-purple-400">OG</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wednesday: Tai Chi -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Wednesday</span>
+                        <span class="text-xs text-slate-400">Tai Chi Flow</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Midweek Energy Flow</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Focus on posture, weight shifting, and graceful arm sweeps.</p>
+                    
+                    <div class="bg-slate-100 dark:bg-slate-700/50 rounded-xl p-3 mb-4 border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">15-Min Energy Routine</span>
+                            <span class="text-[10px] bg-slate-200 dark:bg-slate-600 px-2 py-0.5 rounded">YouTube</span>
+                        </div>
+                        <div class="aspect-video w-full rounded-lg overflow-hidden bg-slate-900 mb-3">
+                            <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/40_KqShnyag" title="Tai Chi Routine" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=40_KqShnyag" target="_blank" class="text-xs text-brand-600 dark:text-brand-400 font-medium hover:underline flex items-center gap-1">
+                            <span>Open on YouTube directly</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Dual Checkboxes -->
+                <div class="border-t border-slate-100 dark:border-slate-700 pt-3 mt-2 flex justify-between items-center">
+                    <span class="text-xs font-medium text-slate-500">Completed:</span>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="wed" data-person="ll" onchange="updateProgress()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                            <span class="font-bold text-brand-600 dark:text-brand-400">LL</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="wed" data-person="og" onchange="updateProgress()" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500">
+                            <span class="font-bold text-purple-600 dark:text-purple-400">OG</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thursday: Strength Training -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Thursday</span>
+                        <span class="text-xs text-slate-400">Strength Builder</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Lower Body & Stability</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Build leg power, balance, and joint integrity safely.</p>
+                    
+                    <div class="space-y-2 mb-4 text-xs">
+                        <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700">
+                            <div class="font-medium text-slate-700 dark:text-slate-300 mb-1">Chair Sit-to-Stands (3 x 10)</div>
+                        </div>
+                        <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700">
+                            <div class="font-medium text-slate-700 dark:text-slate-300 mb-1">Standing Heel Raises (3 x 12)</div>
+                        </div>
+                        <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700">
+                            <div class="font-medium text-slate-700 dark:text-slate-300 mb-1">Side Leg Raises with Support (2 x 10)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dual Checkboxes -->
+                <div class="border-t border-slate-100 dark:border-slate-700 pt-3 mt-2 flex justify-between items-center">
+                    <span class="text-xs font-medium text-slate-500">Completed:</span>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="thu" data-person="ll" onchange="updateProgress()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                            <span class="font-bold text-brand-600 dark:text-brand-400">LL</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="thu" data-person="og" onchange="updateProgress()" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500">
+                            <span class="font-bold text-purple-600 dark:text-purple-400">OG</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friday: Tai Chi -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Friday</span>
+                        <span class="text-xs text-slate-400">Tai Chi Flow</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Weekend Wind-Down Flow</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Calming stretches and relaxing sequential forms to wrap up the week.</p>
+                    
+                    <div class="bg-slate-100 dark:bg-slate-700/50 rounded-xl p-3 mb-4 border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Relaxing Evening Tai Chi</span>
+                            <span class="text-[10px] bg-slate-200 dark:bg-slate-600 px-2 py-0.5 rounded">YouTube</span>
+                        </div>
+                        <div class="aspect-video w-full rounded-lg overflow-hidden bg-slate-900 mb-3">
+                            <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/bxW7wWf_8qM" title="Tai Chi Routine" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=bxW7wWf_8qM" target="_blank" class="text-xs text-brand-600 dark:text-brand-400 font-medium hover:underline flex items-center gap-1">
+                            <span>Open on YouTube directly</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Dual Checkboxes -->
+                <div class="border-t border-slate-100 dark:border-slate-700 pt-3 mt-2 flex justify-between items-center">
+                    <span class="text-xs font-medium text-slate-500">Completed:</span>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="fri" data-person="ll" onchange="updateProgress()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                            <span class="font-bold text-brand-600 dark:text-brand-400">LL</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs cursor-pointer">
+                            <input type="checkbox" data-day="fri" data-person="og" onchange="updateProgress()" class="w-4 h-4 rounded text-purple-600 focus:ring-purple-500">
+                            <span class="font-bold text-purple-600 dark:text-purple-400">OG</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- AI Strength Routine Modal -->
+    <div id="ai-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    AI Strength Routine Generator
+                </h3>
+                <button onclick="closeAiModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Select preferences to generate a tailored strength session for LL & OG:</p>
+            
+            <div class="space-y-4 text-sm mb-6">
+                <div>
+                    <label class="block text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">Intensity Level</label>
+                    <select id="ai-intensity" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl p-2.5 text-xs">
+                        <option value="beginner">Beginner / Gentle Joint Friendly</option>
+                        <option value="moderate">Moderate Strength & Balance</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">Equipment Available</label>
+                    <select id="ai-equipment" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl p-2.5 text-xs">
+                        <option value="bodyweight">Bodyweight & Chair Only</option>
+                        <option value="bands">Resistance Bands & Light Dumbbells</option>
+                    </select>
+                </div>
+                <div id="ai-output" class="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs hidden">
+                    <!-- Generated text appears here -->
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button onclick="closeAiModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-100 dark:bg-slate-700 hover:bg-slate-200">Cancel</button>
+                <button onclick="generateRoutine()" class="px-4 py-2 rounded-xl text-xs font-medium bg-brand-600 hover:bg-brand-700 text-white">Generate Routine</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Persistence & Functionality -->
+    <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Save & Load Checkbox Progress (LL & OG)
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][data-day]');
+            let llCount = 0;
+            let ogCount = 0;
+            const state = {};
+
+            checkboxes.forEach(cb => {
+                const key = `${cb.dataset.day}-${cb.dataset.person}`;
+                state[key] = cb.checked;
+                
+                if (cb.checked) {
+                    if (cb.dataset.person === 'll') llCount++;
+                    if (cb.dataset.person === 'og') ogCount++;
+                }
+            });
+
+            localStorage.setItem('fitness_progress_ll_og', JSON.stringify(state));
+            document.getElementById('ll-progress-text').innerText = llCount;
+            document.getElementById('og-progress-text').innerText = ogCount;
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('fitness_progress_ll_og');
+            if (!saved) return;
+            try {
+                const state = JSON.parse(saved);
+                const checkboxes = document.querySelectorAll('input[type="checkbox"][data-day]');
+                
+                checkboxes.forEach(cb => {
+                    const key = `${cb.dataset.day}-${cb.dataset.person}`;
+                    if (state[key] !== undefined) {
+                        cb.checked = state[key];
+                    }
+                });
+                updateProgress();
+            } catch (e) {
+                console.error("Could not load progress", e);
+            }
+        }
+
+        function resetWeeklyProgress() {
+            if (confirm("Reset all checkmarks for the week?")) {
+                localStorage.removeItem('fitness_progress_ll_og');
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                updateProgress();
+            }
+        }
+
+        // AI Generator Modal
+        function openAiModal() {
+            document.getElementById('ai-modal').classList.remove('hidden');
+        }
+
+        function closeAiModal() {
+            document.getElementById('ai-modal').classList.add('hidden');
+            document.getElementById('ai-output').classList.add('hidden');
+        }
+
+        function generateRoutine() {
+            const intensity = document.getElementById('ai-intensity').value;
+            const equipment = document.getElementById('ai-equipment').value;
+            const outputBox = document.getElementById('ai-output');
+            
+            let routineHTML = "<strong>Generated Routine for LL & OG:</strong><br>";
+            if (intensity === 'beginner') {
+                routineHTML += "• Seated Marching in Place (2 mins)<br>• Wall Push-ups (3 sets of 8 reps)<br>• Gentle Chair Squats (3 sets of 8 reps)<br>• Balance Heel-to-Toe Stand (30 secs)";
+            } else {
+                routineHTML += "• Standing Bodyweight Squats (3 sets of 10 reps)<br>• Resistance Band Bicep Curls (3 sets of 12 reps)<br>• Standing Side Leg Lifts (3 sets of 10 reps)<br>• Wall Plank Hold (30 secs)";
+            }
+
+            outputBox.innerHTML = routineHTML;
+            outputBox.classList.remove('hidden');
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', loadProgress);
+    </script>
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Fitness & Wellness Schedule</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    // Tailwind Config for Emerald/Teal Modern Palette
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar and Smooth Animations */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.7);
+    }
+    .custom-checkbox:checked + label {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-full transition-colors duration-200 font-sans flex flex-col">
+
+  <!-- Header Section -->
+  <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-20 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+          <i class="fa-solid fa-yin-yang text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
+            Mind & Motion Weekly Schedule
+          </h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Tai Chi • Strength Training • Balance</p>
+        </div>
+      </div>
+
+      <!-- Action & Toggle Header Controls -->
+      <div class="flex items-center gap-3">
+        <button id="resetWeekBtn" title="Reset current week completion" class="text-xs px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-rotate-right"></i> Reset Progress
+        </button>
+
+        <button id="themeToggleBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors">
+          <i class="fa-solid fa-moon dark:hidden"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Progress Dashboard Banner -->
+    <section class="bg-gradient-to-r from-emerald-900 to-teal-900 text-white rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+        <i class="fa-solid fa-dumbbell text-9xl"></i>
+      </div>
+      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="space-y-1 max-w-xl">
+          <div class="flex items-center gap-2">
+            <span class="bg-emerald-500/30 text-emerald-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-400/20">
+              Weekly Goal
+            </span>
+            <span id="streakBadge" class="text-xs text-emerald-200/80 flex items-center gap-1">
+              <i class="fa-solid fa-fire text-amber-400"></i> 100% Focus
+            </span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight">Weekly Overview & Consistency</h2>
+          <p class="text-xs sm:text-sm text-emerald-100/80">
+            Alternate between restorative Tai Chi (Mon, Wed, Fri) and structured Strength routines (Tue, Thu) for full-body balance.
+          </p>
+        </div>
+
+        <div class="w-full md:w-72 bg-emerald-950/50 backdrop-blur-md p-4 rounded-xl border border-emerald-500/20 space-y-2">
+          <div class="flex justify-between text-xs font-medium">
+            <span>Completion Rate</span>
+            <span id="overallPercentage" class="text-emerald-300 font-bold">0%</span>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-slate-700">
+            <div id="progressBar" class="bg-gradient-to-r from-emerald-400 to-teal-300 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-[11px] text-emerald-200/70">
+            <span id="completedCounter">0 of 0 tasks</span>
+            <span id="activeDaysCounter">0/5 days active</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule Days Container Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4" id="scheduleContainer">
+      <!-- Days generated dynamically by JS -->
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 mt-8 text-center text-xs text-slate-500 dark:text-slate-400">
+    <p>Weekly Routine Planner • Tai Chi & Strength Schedule</p>
+  </footer>
+
+  <!-- Video Player Modal -->
+  <div id="videoModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden max-w-3xl w-full shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col max-h-[90vh]">
+      <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+        <h3 id="modalVideoTitle" class="font-semibold text-slate-800 dark:text-slate-100 truncate pr-4">Tai Chi Video</h3>
+        <button id="closeVideoModal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="relative aspect-video w-full bg-black">
+        <iframe id="videoIframe" class="w-full h-full" src="" title="YouTube Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 text-right">
+        <button id="closeVideoModalBtn" class="px-4 py-1.5 text-xs font-medium rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">Close Player</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Custom Workout Modal -->
+  <div id="addModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-700 space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-700 pb-3">
+        <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle text-emerald-500"></i> Add Exercise / Routine
+        </h3>
+        <button id="closeAddModal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="addWorkoutForm" class="space-y-4">
+        <input type="hidden" id="addModalDay" value="">
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Exercise Title / Name</label>
+          <input type="text" id="addTitle" required placeholder="e.g. 20-min Morning Tai Chi or Dumbbell Press" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div id="videoUrlGroup">
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">YouTube URL (Optional)</label>
+          <input type="url" id="addVideoUrl" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Sets / Note (Opt)</label>
+            <input type="text" id="addSets" placeholder="e.g. 3 sets x 12" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Category</label>
+            <select id="addType" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="taichi">Tai Chi</option>
+              <option value="strength">Strength</option>
+              <option value="cardio">Cardio/Mobility</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelAddBtn" class="px-4 py-2 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">Cancel</button>
+          <button type="submit" class="px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition-colors">Add Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2.5 rounded-xl shadow-lg text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 z-50 pointer-events-none">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600"></i>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // Initial Pre-populated Weekly Data Structure
+    const defaultSchedule = {
+      Monday: {
+        focus: 'Tai Chi',
+        type: 'taichi',
+        tagline: 'Flow & Mindfulness',
+        icon: 'fa-yin-yang',
+        badgeColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300',
+        items: [
+          {
+            id: 'm1',
+            title: '20 Min Morning Tai Chi for Beginners',
+            duration: '20 min',
+            youtubeUrl: 'https://www.youtube.com/watch?v=cEOS2zoyUb4',
+            completed: false,
+            category: 'taichi'
+          },
+          {
+            id: 'm2',
+            title: 'Tai Chi Warmup & Breathing Exercises',
+            duration: '10 min',
+            youtubeUrl: 'https://www.youtube.com/watch?v=vHBR5MZ3_uw',
+            completed: false,
+            category: 'taichi'
+          }
+        ]
+      },
+      Tuesday: {
+        focus: 'Strength (Upper Body)',
+        type: 'strength',
+        tagline: 'Hypertrophy & Posture',
+        icon: 'fa-dumbbell',
+        badgeColor: 'bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-300',
+        items: [
+          { id: 'tu1', title: 'Dumbbell Bench / Floor Press', meta: '3 sets × 10-12 reps', completed: false, category: 'strength' },
+          { id: 'tu2', title: 'Bent-Over Dumbbell Rows', meta: '3 sets × 12 reps', completed: false, category: 'strength' },
+          { id: 'tu3', title: 'Overhead Shoulder Press', meta: '3 sets × 10 reps', completed: false, category: 'strength' },
+          { id: 'tu4', title: 'Push-ups or Incline Push-ups', meta: '3 sets × To Failure', completed: false, category: 'strength' }
+        ]
+      },
+      Wednesday: {
+        focus: 'Tai Chi',
+        type: 'taichi',
+        tagline: 'Balance & Joint Health',
+        icon: 'fa-yin-yang',
+        badgeColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300',
+        items: [
+          {
+            id: 'w1',
+            title: '15 Min Tai Chi for Balance & Stability',
+            duration: '15 min',
+            youtubeUrl: 'https://www.youtube.com/watch?v=8V-Jm9Gk8V0',
+            completed: false,
+            category: 'taichi'
+          },
+          {
+            id: 'w2',
+            title: 'Qigong Energy Flow Routine',
+            duration: '12 min',
+            youtubeUrl: 'https://www.youtube.com/watch?v=cwlvTcWR3Gs',
+            completed: false,
+            category: 'taichi'
+          }
+        ]
+      },
+      Thursday: {
+        focus: 'Strength (Lower Body)',
+        type: 'strength',
+        tagline: 'Leg Power & Core Stablity',
+        icon: 'fa-child-reaching',
+        badgeColor: 'bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-300',
+        items: [
+          { id: 'th1', title: 'Goblet Squats or Bodyweight Squats', meta: '3 sets × 12 reps', completed: false, category: 'strength' },
+          { id: 'th2', title: 'Dumbbell Romanian Deadlifts', meta: '3 sets × 12 reps', completed: false, category: 'strength' },
+          { id: 'th3', title: 'Walking Lunges', meta: '3 sets × 10 reps/leg', completed: false, category: 'strength' },
+          { id: 'th4', title: 'Plank Hold', meta: '3 sets × 45 seconds', completed: false, category: 'strength' }
+        ]
+      },
+      Friday: {
+        focus: 'Tai Chi',
+        type: 'taichi',
+        tagline: 'Stress Relief & Relaxation',
+        icon: 'fa-yin-yang',
+        badgeColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300',
+        items: [
+          {
+            id: 'f1',
+            title: '18 Min Tai Chi Evening Wind Down',
+            duration: '18 min',
+            youtubeUrl: 'https://www.youtube.com/watch?v=f35i_c_35e8',
+            completed: false,
+            category: 'taichi'
+          },
+          {
+            id: 'f2',
+            title: 'Tai Chi Form 24 - Step-by-Step Flow',
+            duration: '20 min',
+            youtubeUrl: 'https://www.youtube.com/watch?v=0k3PSp2uN9A',
+            completed: false,
+            category: 'taichi'
+          }
+        ]
+      }
+    };
+
+    // AI Strength Generator Bank (Simulated dynamic workout generator)
+    const aiStrengthBank = {
+      Upper: [
+        { title: 'Incline Dumbbell Press', meta: '4 sets × 10 reps' },
+        { title: 'Lat Pulldowns or Dumbbell Pullovers', meta: '3 sets × 12 reps' },
+        { title: 'Arnold Shoulder Press', meta: '3 sets × 10 reps' },
+        { title: 'Face Pulls or Band Pull-Aparts', meta: '3 sets × 15 reps' },
+        { title: 'Hammer Curls superset with Triceps Dips', meta: '3 sets × 12 reps' }
+      ],
+      Lower: [
+        { title: 'Bulgarian Split Squats', meta: '3 sets × 8 reps/leg' },
+        { title: 'Barbell/Dumbbell Hip Thrusts', meta: '4 sets × 12 reps' },
+        { title: 'Calf Raises & Hamstring Curls', meta: '3 sets × 15 reps' },
+        { title: 'Russian Twists', meta: '3 sets × 20 total' },
+        { title: 'Step-ups with Dumbbells', meta: '3 sets × 10 reps/leg' }
+      ],
+      FullBody: [
+        { title: 'Dumbbell Thrusters', meta: '3 sets × 10 reps' },
+        { title: 'Renegade Rows', meta: '3 sets × 8 reps/side' },
+        { title: 'Kettlebell/Dumbbell Swings', meta: '4 sets × 15 reps' },
+        { title: 'Bear Crawl Hold / Hollow Body Hold', meta: '3 sets × 30 sec' },
+        { title: 'Push-up to Side Plank', meta: '3 sets × 8 reps/side' }
+      ]
+    };
+
+    // App State Management
+    let scheduleData = {};
+
+    // Helper: LocalStorage operations
+    function loadData() {
+      const saved = localStorage.getItem('mindMotion_schedule_v1');
+      if (saved) {
+        try {
+          scheduleData = JSON.parse(saved);
+        } catch(e) {
+          scheduleData = JSON.parse(JSON.stringify(defaultSchedule));
+        }
+      } else {
+        scheduleData = JSON.parse(JSON.stringify(defaultSchedule));
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem('mindMotion_schedule_v1', JSON.stringify(scheduleData));
+      updateProgress();
+    }
+
+    // Helper: Extract YouTube Video ID
+    function getYouTubeId(url) {
+      if (!url) return null;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    // Render Weekly Cards
+    function renderSchedule() {
+      const container = document.getElementById('scheduleContainer');
+      container.innerHTML = '';
+
+      Object.keys(scheduleData).forEach(day => {
+        const dayData = scheduleData[day];
+        const dayCard = document.createElement('div');
+        dayCard.className = "bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between overflow-hidden";
+
+        // Card Header
+        let cardHTML = `
+          <div>
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/80 flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-slate-800 dark:text-slate-100 text-base flex items-center gap-2">
+                  ${day}
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">${dayData.tagline}</p>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${dayData.badgeColor} flex items-center gap-1">
+                <i class="fa-solid ${dayData.icon} text-[10px]"></i> ${dayData.focus}
+              </span>
+            </div>
+
+            <!-- Items List -->
+            <div class="p-3 space-y-2.5">
+        `;
+
+        if (dayData.items.length === 0) {
+          cardHTML += `
+            <div class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs italic">
+              No exercises scheduled for ${day}.
+            </div>
+          `;
+        } else {
+          dayData.items.forEach((item, index) => {
+            const ytId = getYouTubeId(item.youtubeUrl);
+            cardHTML += `
+              <div class="group relative bg-slate-50 dark:bg-slate-700/30 rounded-xl p-2.5 border border-slate-200/60 dark:border-slate-700 flex items-start gap-2.5 transition-colors hover:border-emerald-500/40">
+                <input 
+                  type="checkbox" 
+                  id="chk-${day}-${item.id}" 
+                  ${item.completed ? 'checked' : ''} 
+                  onchange="toggleItem('${day}', '${item.id}')" 
+                  class="custom-checkbox mt-1 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 cursor-pointer accent-emerald-500"
+                >
+                <div class="flex-1 min-w-0">
+                  <label for="chk-${day}-${item.id}" class="text-xs font-medium text-slate-800 dark:text-slate-200 block truncate cursor-pointer select-none">
+                    ${item.title}
+                  </label>
+                  
+                  <div class="flex items-center gap-2 mt-1 text-[10px] text-slate-500 dark:text-slate-400">
+                    ${item.meta ? `<span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-700 dark:text-slate-300 font-medium">${item.meta}</span>` : ''}
+                    ${item.duration ? `<span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> ${item.duration}</span>` : ''}
+                    ${ytId ? `
+                      <button onclick="playVideo('${ytId}', '${item.title.replace(/'/g, "\\'")}')" class="text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 font-semibold ml-auto">
+                        <i class="fa-solid fa-circle-play text-xs text-red-500"></i> Watch Video
+                      </button>
+                    ` : ''}
+                  </div>
+                </div>
+
+                <!-- Delete Action -->
+                <button onclick="deleteItem('${day}', '${item.id}')" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 p-1 text-xs transition-opacity" title="Delete item">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            `;
+          });
+        }
+
+        cardHTML += `</div></div>`;
+
+        // Card Footer Actions
+        cardHTML += `
+          <div class="p-3 border-t border-slate-100 dark:border-slate-700/60 bg-slate-50/30 dark:bg-slate-800/40 space-y-2">
+            ${dayData.type === 'strength' ? `
+              <button onclick="generateAIRoutine('${day}')" class="w-full py-1.5 px-2 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Generate AI Routine
+              </button>
+            ` : ''}
+            <button onclick="openAddModal('${day}')" class="w-full py-1.5 px-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/60 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors">
+              <i class="fa-solid fa-plus"></i> Add Item
+            </button>
+          </div>
+        `;
+
+        dayCard.innerHTML = cardHTML;
+        container.appendChild(dayCard);
+      });
+
+      updateProgress();
+    }
+
+    // Toggle Checkbox Status
+    window.toggleItem = function(day, itemId) {
+      const item = scheduleData[day].items.find(i => i.id === itemId);
+      if (item) {
+        item.completed = !item.completed;
+        saveData();
+        showToast(item.completed ? 'Workout completed!' : 'Workout unchecked');
+      }
+    };
+
+    // Delete Item
+    window.deleteItem = function(day, itemId) {
+      scheduleData[day].items = scheduleData[day].items.filter(i => i.id !== itemId);
+      saveData();
+      renderSchedule();
+      showToast('Item deleted');
+    };
+
+    // Simulated AI Routine Generator for Strength Days
+    window.generateAIRoutine = function(day) {
+      const categories = ['Upper', 'Lower', 'FullBody'];
+      let targetCat = 'FullBody';
+      if (day === 'Tuesday') targetCat = 'Upper';
+      if (day === 'Thursday') targetCat = 'Lower';
+
+      // Pick 3 random exercises from AI bank
+      const pool = [...aiStrengthBank[targetCat]];
+      // Shuffle
+      pool.sort(() => 0.5 - Math.random());
+      const selected = pool.slice(0, 3);
+
+      const newItems = selected.map((ex, idx) => ({
+        id: 'ai-' + Date.now() + '-' + idx,
+        title: ex.title,
+        meta: ex.meta,
+        completed: false,
+        category: 'strength'
+      }));
+
+      // Append or replaces items
+      scheduleData[day].items = [...scheduleData[day].items, ...newItems];
+      saveData();
+      renderSchedule();
+      showToast(`AI Generated ${selected.length} exercises for ${day}!`);
+    };
+
+    // Video Modal Player
+    window.playVideo = function(ytId, title) {
+      const modal = document.getElementById('videoModal');
+      const iframe = document.getElementById('videoIframe');
+      const titleEl = document.getElementById('modalVideoTitle');
+
+      titleEl.innerText = title;
+      iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+      modal.classList.remove('hidden');
+    };
+
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const iframe = document.getElementById('videoIframe');
+      iframe.src = '';
+      modal.classList.add('hidden');
+    }
+
+    // Modal Operations
+    window.openAddModal = function(day) {
+      document.getElementById('addModalDay').value = day;
+      document.getElementById('addTitle').value = '';
+      document.getElementById('addVideoUrl').value = '';
+      document.getElementById('addSets').value = '';
+      
+      // Auto set category select based on day default
+      const defaultType = scheduleData[day].type;
+      document.getElementById('addType').value = defaultType;
+
+      document.getElementById('addModal').classList.remove('hidden');
+    };
+
+    function closeAddModal() {
+      document.getElementById('addModal').classList.add('hidden');
+    }
+
+    // Update Progress Dashboard Stats
+    function updateProgress() {
+      let totalItems = 0;
+      let completedItems = 0;
+      let activeDaysCount = 0;
+
+      Object.keys(scheduleData).forEach(day => {
+        const items = scheduleData[day].items;
+        totalItems += items.length;
+        const dayCompletedCount = items.filter(i => i.completed).length;
+        completedItems += dayCompletedCount;
+
+        if (dayCompletedCount > 0 && items.length > 0) {
+          activeDaysCount++;
+        }
+      });
+
+      const percentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+      document.getElementById('overallPercentage').innerText = `${percentage}%`;
+      document.getElementById('progressBar').style.width = `${percentage}%`;
+      document.getElementById('completedCounter').innerText = `${completedItems} of ${totalItems} completed`;
+      document.getElementById('activeDaysCounter').innerText = `${activeDaysCount}/5 days active`;
+    }
+
+    // Toast Notification helper
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.remove('opacity-0', 'translate-y-20');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-20');
+      }, 2500);
+    }
+
+    // Theme Switcher Initialization
+    function initTheme() {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+      }
+    });
+
+    // Event Listeners setup
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      loadData();
+      renderSchedule();
+
+      // Video Modal Handlers
+      document.getElementById('closeVideoModal').addEventListener('click', closeVideoModal);
+      document.getElementById('closeVideoModalBtn').addEventListener('click', closeVideoModal);
+
+      // Add Modal Handlers
+      document.getElementById('closeAddModal').addEventListener('click', closeAddModal);
+      document.getElementById('cancelAddBtn').addEventListener('click', closeAddModal);
+
+      // Form submission
+      document.getElementById('addWorkoutForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const day = document.getElementById('addModalDay').value;
+        const title = document.getElementById('addTitle').value.trim();
+        const videoUrl = document.getElementById('addVideoUrl').value.trim();
+        const sets = document.getElementById('addSets').value.trim();
+        const category = document.getElementById('addType').value;
+
+        if (!title) return;
+
+        const newItem = {
+          id: 'custom-' + Date.now(),
+          title: title,
+          youtubeUrl: videoUrl || null,
+          meta: sets || null,
+          completed: false,
+          category: category
+        };
+
+        scheduleData[day].items.push(newItem);
+        saveData();
+        renderSchedule();
+        closeAddModal();
+        showToast('New activity added!');
+      });
+
+      // Reset Weekly Progress Button
+      document.getElementById('resetWeekBtn').addEventListener('click', () => {
+        Object.keys(scheduleData).forEach(day => {
+          scheduleData[day].items.forEach(item => item.completed = false);
+        });
+        saveData();
+        renderSchedule();
+        showToast('Weekly progress reset');
+      });
+    });
+  </script>
+</body>
+</html>

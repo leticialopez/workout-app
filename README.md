@@ -69,10 +69,3 @@ To connect family members to the Tuesday & Thursday routines on FitOn, follow th
    * Choose branch `main` / `root` and click **Save**.
 4. **Refreshing Live Site:**
    * Once the deployment checkmark turns green, perform a hard refresh in your browser (`Ctrl` + `Shift` + `R` or `Ctrl` + `F5`) to clear cached assets.
-
----
-
-## 💡 Notes on Local Editing (Windows / Microsoft Edge)
-
-* Windows automatically assigns default browser icons to `.html` files (e.g., displaying a Microsoft Edge logo).
-* This is normal browser association behavior on Windows and does not alter the underlying HTML file structure or GitHub Pages deployment.

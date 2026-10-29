@@ -43,17 +43,9 @@ To connect family members to the Tuesday & Thursday routines on FitOn, follow th
    * Send invite links or connect via contacts with all participating family members.
 
 2. **Post videos weekly:**
-   * Go to **Workouts** $\rightarrow$ **Challenges** $\rightarrow$ **Add Challenge** (or **+** icon).
-   * Name the challenge (e.g., *Strength Training Hub*) and add a custom cover icon.
+   * Find interesting videos and post the name, description and amount of time Videos under 20 minutes.
+   * Add an optional video is original video short. 
 
-3. **Configure Challenge Settings:**
-   * **Private:** `ON` (Restricts access exclusively to invited family members).
-   * **Select Workouts:** `YES` (Allows hand-picking specific routines like *Beginner Starter Mix* and *Barre Foundations*).
-   * **Time Limit:** `NO` (Permits flexible completion without rigid expiration times).
-
-4. **Invite Participants & Add Videos Continuously:**
-   * Tap **Invite** on the challenge dashboard and select your connected family members.
-   * You can edit the challenge at any time to add, update, or rotate new FitOn routines into the hub.
 
 ---
 

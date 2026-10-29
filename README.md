@@ -42,7 +42,7 @@ To connect family members to the Tuesday & Thursday routines on FitOn, follow th
    * Open FitOn $\rightarrow$ Go to the **Friends** tab.
    * Send invite links or connect via contacts with all participating family members.
 
-2. **Create the Challenge:**
+2. **Post videos weekly:**
    * Go to **Workouts** $\rightarrow$ **Challenges** $\rightarrow$ **Add Challenge** (or **+** icon).
    * Name the challenge (e.g., *Strength Training Hub*) and add a custom cover icon.
 
